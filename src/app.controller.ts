@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  HttpCode,
 } from '@nestjs/common';
 import { data, ReportType } from 'src/data';
 import { v4 as uuid } from 'uuid';
@@ -74,10 +75,13 @@ export class AppController {
   }
 
   @Delete(':id')
-  deleteReport() {
-    return 'Delete';
+  @HttpCode(204)
+  deleteReport(@Param('id') id: string) {
+    const reportIndex = data.report.findIndex((report) => report.id === id);
+    if (reportIndex === -1) return;
+
+    data.report.splice(reportIndex, 1);
+
+    return;
   }
 }
-
-// @Controller('report/income') erzeugt quasi:
-// http://localhost:3000/ + report/income = http://localhost:3000/report/income
